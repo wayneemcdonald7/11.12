@@ -1,0 +1,41 @@
+import tkinter as tk
+from tkinter import messagebox
+
+class SkinCareApp:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Skin Care App")
+
+        self.skin_types = ["Normal", "Oily", "Dry", "Combination", "Sensitive"]
+
+        self.skin_type_var = tk.StringVar()
+        self.skin_type_var.set(self.skin_types[0])
+
+        # Create GUI elements
+        tk.Label(master, text="Select your skin type:").pack(pady=10)
+        tk.OptionMenu(master, self.skin_type_var, *self.skin_types).pack(pady=10)
+
+        tk.Button(master, text="Get Daily Tips", command=self.show_skin_care_tips).pack(pady=20)
+
+    def show_skin_care_tips(self):
+        selected_skin_type = self.skin_type_var.get()
+        tips = self.get_skin_care_tips(selected_skin_type)
+        messagebox.showinfo(f"Skin Care Tips for {selected_skin_type} Skin", tips)
+
+    def get_skin_care_tips(self, skin_type):
+        tips_dict = {
+            "Normal": "Use a mild cleanser and a light moisturizer. Avoid harsh products.",
+            "Oily": "Use oil-free cleansers and moisturizers. Consider using a toner to control oil.",
+            "Dry": "Use a gentle, hydrating cleanser and a rich moisturizer. Apply moisturizer regularly.",
+            "Combination": "Use a gentle cleanser. Moisturize dry areas and use oil-free products on oily areas.",
+            "Sensitive": "Choose fragrance-free and hypoallergenic products. Perform patch tests before trying new products."
+        }
+        return tips_dict.get(skin_type, "No specific tips available for this skin type.")
+
+def main():
+    root = tk.Tk()
+    app = SkinCareApp(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
