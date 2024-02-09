@@ -11,26 +11,64 @@ class SkinCareApp:
         self.skin_type_var = tk.StringVar()
         self.skin_type_var.set(self.skin_types[0])
 
+        self.username_var = tk.StringVar()
+
         # Create GUI elements
+        tk.Label(master, text="Enter your username:").pack(pady=10)
+        tk.Entry(master, textvariable=self.username_var).pack(pady=10)
+
         tk.Label(master, text="Select your skin type:").pack(pady=10)
         tk.OptionMenu(master, self.skin_type_var, *self.skin_types).pack(pady=10)
 
         tk.Button(master, text="Get Daily Tips", command=self.show_skin_care_tips).pack(pady=20)
 
     def show_skin_care_tips(self):
+        username = self.username_var.get()
         selected_skin_type = self.skin_type_var.get()
-        tips = self.get_skin_care_tips(selected_skin_type)
-        messagebox.showinfo(f"Skin Care Tips for {selected_skin_type} Skin", tips)
 
-    def get_skin_care_tips(self, skin_type):
-        tips_dict = {
-            "Normal": "Use a mild cleanser and a light moisturizer. Avoid harsh products.",
-            "Oily": "Use oil-free cleansers and moisturizers. Consider using a toner to control oil.",
-            "Dry": "Use a gentle, hydrating cleanser and a rich moisturizer. Apply moisturizer regularly.",
-            "Combination": "Use a gentle cleanser. Moisturize dry areas and use oil-free products on oily areas.",
-            "Sensitive": "Choose fragrance-free and hypoallergenic products. Perform patch tests before trying new products."
+        if not username:
+            messagebox.showwarning("Warning", "Please enter your username.")
+            return
+
+        morning_tips = self.get_morning_tips(selected_skin_type)
+        evening_tips = self.get_evening_tips(selected_skin_type)
+        product_recommendations = self.get_product_recommendations(selected_skin_type)
+
+        tips_message = f"Good morning, {username}!\n\nMorning Tips for {selected_skin_type} Skin:\n{morning_tips}\n\n"
+        tips_message += f"Evening Tips for {selected_skin_type} Skin:\n{evening_tips}\n\n"
+        tips_message += f"Product Recommendations:\n{product_recommendations}"
+
+        messagebox.showinfo(f"Skin Care Tips for {selected_skin_type} Skin", tips_message)
+
+    def get_morning_tips(self, skin_type):
+        morning_tips_dict = {
+            "Normal": "Cleanse your face with a gentle cleanser. Apply a lightweight moisturizer.",
+            "Oily": "Use a foaming cleanser to control oil. Apply an oil-free moisturizer.",
+            "Dry": "Use a hydrating cleanser. Apply a rich moisturizer to combat dryness.",
+            "Combination": "Cleanse with a mild cleanser. Apply a lightweight moisturizer on the entire face.",
+            "Sensitive": "Use a fragrance-free cleanser. Apply a hypoallergenic moisturizer."
         }
-        return tips_dict.get(skin_type, "No specific tips available for this skin type.")
+        return morning_tips_dict.get(skin_type, "No specific morning tips available for this skin type.")
+
+    def get_evening_tips(self, skin_type):
+        evening_tips_dict = {
+            "Normal": "Cleanse your face to remove the day's impurities. Apply a light night cream.",
+            "Oily": "Use a gentle cleanser. Apply a gel-based night moisturizer.",
+            "Dry": "Cleanse and moisturize. Consider using a hydrating serum for extra moisture.",
+            "Combination": "Cleanse and apply a balanced night cream. Focus on moisturizing dry areas.",
+            "Sensitive": "Cleanse gently and apply a soothing night cream for sensitive skin."
+        }
+        return evening_tips_dict.get(skin_type, "No specific evening tips available for this skin type.")
+
+    def get_product_recommendations(self, skin_type):
+        product_recommendations_dict = {
+            "Normal": "Cleanser: Cetaphil Gentle Cleanser\nMoisturizer: Neutrogena Hydro Boost",
+            "Oily": "Cleanser: La Roche-Posay Effaclar Purifying Foaming Gel\nMoisturizer: Clinique Dramatically Different Gel",
+            "Dry": "Cleanser: CeraVe Hydrating Cleanser\nMoisturizer: Cetaphil Moisturizing Cream",
+            "Combination": "Cleanser: Dermalogica Special Cleansing Gel\nMoisturizer: Kiehl's Ultra Facial Cream",
+            "Sensitive": "Cleanser: Aveeno Ultra-Calming Foaming Cleanser\nMoisturizer: Vanicream Moisturizing Cream"
+        }
+        return product_recommendations_dict.get(skin_type, "No specific product recommendations available for this skin type.")
 
 def main():
     root = tk.Tk()
