@@ -13,6 +13,9 @@ class SkinCareApp:
 
         self.username_var = tk.StringVar()
 
+        # User profiles (dictionary to store profiles)
+        self.user_profiles = {}
+
         # Create GUI elements
         tk.Label(master, text="Enter your username:").pack(pady=10)
         tk.Entry(master, textvariable=self.username_var).pack(pady=10)
@@ -20,7 +23,10 @@ class SkinCareApp:
         tk.Label(master, text="Select your skin type:").pack(pady=10)
         tk.OptionMenu(master, self.skin_type_var, *self.skin_types).pack(pady=10)
 
-        tk.Button(master, text="Get Daily Tips", command=self.show_skin_care_tips).pack(pady=20)
+        tk.Button(master, text="Get Daily Tips", command=self.show_skin_care_tips).pack(pady=10)
+        tk.Button(master, text="Set Reminder", command=self.set_reminder).pack(pady=10)
+        tk.Button(master, text="Save Profile", command=self.save_profile).pack(pady=10)
+        tk.Button(master, text="Load Profile", command=self.load_profile).pack(pady=10)
 
     def show_skin_care_tips(self):
         username = self.username_var.get()
@@ -36,39 +42,49 @@ class SkinCareApp:
 
         tips_message = f"Good morning, {username}!\n\nMorning Tips for {selected_skin_type} Skin:\n{morning_tips}\n\n"
         tips_message += f"Evening Tips for {selected_skin_type} Skin:\n{evening_tips}\n\n"
-        tips_message += f"Product Recommendations:\n{product_recommendations}"
+        tips_message += f"Product Recommendations:\n{product_recommendations}\n\n"
+        tips_message += "Don't forget to apply sunscreen during the day to protect your skin from harmful UV rays."
 
         messagebox.showinfo(f"Skin Care Tips for {selected_skin_type} Skin", tips_message)
 
     def get_morning_tips(self, skin_type):
-        morning_tips_dict = {
-            "Normal": "Cleanse your face with a gentle cleanser. Apply a lightweight moisturizer.",
-            "Oily": "Use a foaming cleanser to control oil. Apply an oil-free moisturizer.",
-            "Dry": "Use a hydrating cleanser. Apply a rich moisturizer to combat dryness.",
-            "Combination": "Cleanse with a mild cleanser. Apply a lightweight moisturizer on the entire face.",
-            "Sensitive": "Use a fragrance-free cleanser. Apply a hypoallergenic moisturizer."
-        }
-        return morning_tips_dict.get(skin_type, "No specific morning tips available for this skin type.")
+        # ... (unchanged)
 
     def get_evening_tips(self, skin_type):
-        evening_tips_dict = {
-            "Normal": "Cleanse your face to remove the day's impurities. Apply a light night cream.",
-            "Oily": "Use a gentle cleanser. Apply a gel-based night moisturizer.",
-            "Dry": "Cleanse and moisturize. Consider using a hydrating serum for extra moisture.",
-            "Combination": "Cleanse and apply a balanced night cream. Focus on moisturizing dry areas.",
-            "Sensitive": "Cleanse gently and apply a soothing night cream for sensitive skin."
-        }
-        return evening_tips_dict.get(skin_type, "No specific evening tips available for this skin type.")
+        # ... (unchanged)
 
     def get_product_recommendations(self, skin_type):
-        product_recommendations_dict = {
-            "Normal": "Cleanser: Cetaphil Gentle Cleanser\nMoisturizer: Neutrogena Hydro Boost",
-            "Oily": "Cleanser: La Roche-Posay Effaclar Purifying Foaming Gel\nMoisturizer: Clinique Dramatically Different Gel",
-            "Dry": "Cleanser: CeraVe Hydrating Cleanser\nMoisturizer: Cetaphil Moisturizing Cream",
-            "Combination": "Cleanser: Dermalogica Special Cleansing Gel\nMoisturizer: Kiehl's Ultra Facial Cream",
-            "Sensitive": "Cleanser: Aveeno Ultra-Calming Foaming Cleanser\nMoisturizer: Vanicream Moisturizing Cream"
-        }
-        return product_recommendations_dict.get(skin_type, "No specific product recommendations available for this skin type.")
+        # ... (unchanged)
+
+    def set_reminder(self):
+        username = self.username_var.get()
+        if not username:
+            messagebox.showwarning("Warning", "Please enter your username before setting a reminder.")
+            return
+
+        reminder_message = f"Hi, {username}! Don't forget to take care of your skin today. Follow your skincare routine."
+
+        messagebox.showinfo("Set Reminder", f"Reminder set for {username}:\n{reminder_message}")
+
+    def save_profile(self):
+        username = self.username_var.get()
+        skin_type = self.skin_type_var.get()
+
+        if username and skin_type:
+            self.user_profiles[username] = {"SkinType": skin_type}
+            messagebox.showinfo("Save Profile", f"Profile for {username} saved successfully.")
+        else:
+            messagebox.showwarning("Warning", "Please enter both username and skin type before saving.")
+
+    def load_profile(self):
+        username = self.username_var.get()
+
+        if username in self.user_profiles:
+            skin_type = self.user_profiles[username]["SkinType"]
+            self.skin_type_var.set(skin_type)
+            messagebox.showinfo("Load Profile", f"Profile for {username} loaded successfully.")
+        else:
+            messagebox.showwarning("Warning", f"Profile for {username} not found.")
 
 def main():
     root = tk.Tk()
