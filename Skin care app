@@ -27,6 +27,7 @@ class SkinCareApp:
         tk.Button(master, text="Set Reminder", command=self.set_reminder).pack(pady=10)
         tk.Button(master, text="Save Profile", command=self.save_profile).pack(pady=10)
         tk.Button(master, text="Load Profile", command=self.load_profile).pack(pady=10)
+        tk.Button(master, text="Clear Profile", command=self.clear_profile).pack(pady=10)
 
     def show_skin_care_tips(self):
         username = self.username_var.get()
@@ -39,10 +40,14 @@ class SkinCareApp:
         morning_tips = self.get_morning_tips(selected_skin_type)
         evening_tips = self.get_evening_tips(selected_skin_type)
         product_recommendations = self.get_product_recommendations(selected_skin_type)
+        concern_recommendations = self.get_concern_recommendations(selected_skin_type)
+        skincare_basics = self.get_skincare_basics()
 
         tips_message = f"Good morning, {username}!\n\nMorning Tips for {selected_skin_type} Skin:\n{morning_tips}\n\n"
         tips_message += f"Evening Tips for {selected_skin_type} Skin:\n{evening_tips}\n\n"
         tips_message += f"Product Recommendations:\n{product_recommendations}\n\n"
+        tips_message += f"Recommendations for Specific Skin Concerns:\n{concern_recommendations}\n\n"
+        tips_message += f"Skincare Basics:\n{skincare_basics}\n\n"
         tips_message += "Don't forget to apply sunscreen during the day to protect your skin from harmful UV rays."
 
         messagebox.showinfo(f"Skin Care Tips for {selected_skin_type} Skin", tips_message)
@@ -55,6 +60,26 @@ class SkinCareApp:
 
     def get_product_recommendations(self, skin_type):
         # ... (unchanged)
+
+    def get_concern_recommendations(self, skin_type):
+        concern_recommendations_dict = {
+            "Normal": "No specific recommendations for normal skin. Maintain a healthy skincare routine.",
+            "Oily": "Use oil-control products containing salicylic acid. Consider using a clay mask once a week.",
+            "Dry": "Use hydrating products containing hyaluronic acid. Incorporate a rich moisturizing mask into your routine.",
+            "Combination": "Balance oily and dry areas with targeted products. Use mattifying products on the T-zone and hydrating products on dry areas.",
+            "Sensitive": "Avoid fragranced products and harsh ingredients. Use gentle, soothing products containing chamomile or aloe vera."
+        }
+        return concern_recommendations_dict.get(skin_type, "No specific recommendations available for this skin type.")
+
+    def get_skincare_basics(self):
+        skincare_basics_info = """
+        1. Cleanse: Wash your face twice daily with a gentle cleanser to remove dirt, oil, and makeup.
+        2. Moisturize: Apply a moisturizer suitable for your skin type to keep your skin hydrated.
+        3. Protect: Use sunscreen with broad-spectrum SPF 30 or higher daily, even on cloudy days.
+        4. Hydrate: Drink plenty of water to keep your skin hydrated from within.
+        5. Healthy lifestyle: Eat a balanced diet, exercise regularly, and get enough sleep for overall skin health.
+        """
+        return skincare_basics_info
 
     def set_reminder(self):
         username = self.username_var.get()
@@ -85,6 +110,15 @@ class SkinCareApp:
             messagebox.showinfo("Load Profile", f"Profile for {username} loaded successfully.")
         else:
             messagebox.showwarning("Warning", f"Profile for {username} not found.")
+
+    def clear_profile(self):
+        username = self.username_var.get()
+        if username:
+            self.username_var.set("")
+            self.skin_type_var.set(self.skin_types[0])
+            messagebox.showinfo("Clear Profile", "Profile cleared successfully.")
+        else:
+            messagebox.showwarning("Warning", "No profile to clear.")
 
 def main():
     root = tk.Tk()
